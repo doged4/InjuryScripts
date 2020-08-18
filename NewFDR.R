@@ -34,8 +34,8 @@ sumData <- colSums(selected.data[3:length(selected.data)])
 norm.data <- data.frame(cbind(
     "Geneid" = selected.data$Geneid,
     "Chr" = selected.data$Chr,
-    scale(selected.data[3:length(selected.data)],
       center = FALSE,
+    scale(selected.data[3:length(selected.data)],
       scale = sumData)))
 
 
@@ -55,7 +55,18 @@ for (i in 1:nrow(selected.data)) {
                                            expList])
   controls = as.numeric(selected.data[i,
                                       conList])
-  test <- t.test(controls, experimentals, paired = FALSE, alternative = "two.sided") #changed to false
+  test <- tryCatch({
+    t.test(controls, experimentals, paired = FALSE, alternative = "two.sided") #changed to false
+  }, warning = function(w) {
+  }, error = function(e) {
+    list(statistic = NA, 
+         p.value = NA, 
+         conf.int = c(NA,NA),
+         estimate = c(mean(experimentals),mean(controls)))
+  }, finally = {
+  })
+  
+  # test2 <- t.test(controls, experimentals, paired = FALSE, alternative = "two.sided") #changed to false
   selected.data$t_stat   [i] <- test$statistic
   selected.data$p        [i] <- test$p.value
   selected.data$mean_diff[i] <- test$estimate[1] - test$estimate[2] #changed to subtract means!!
@@ -73,16 +84,12 @@ out.data <- rbind(c("sums", NA, sumData, NA, NA, NA, NA, NA, NA), selected.data)
 
 
 
-out.data$GenesSymbol <- convertGenes$Gene.name[match(x= out.data$Geneid,table = convertGenes$Gene.stable.ID)]
+out.data$GenesSymbol <- convertGenes$Gene.name[match(x= out.data$Geneid, table = convertGenes$Gene.stable.ID)]
 
+out.data <- cbind("Geneid" = out.data$Geneid, "Gene Name" = out.data$GenesSymbol,"Chr" = out.data$Chr, out.data[,3:(length(out.data)-1)])
 
 write.table(out.data,
-            "~/Desktop/cfpcutoff.mockFdrtest.tsv",
+            "~/Desktop/04_05_geneCounts.mapped_Cc to Ec.tsv",
             col.names = TRUE,
             row.names = FALSE,
             sep = "\t")
-
-write.xlsx(out.data, "~/Desktop/t.xlsx",)
-
-
-
