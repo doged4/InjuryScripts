@@ -89,7 +89,8 @@ out.data$GenesSymbol <- convertGenes$Gene.name[match(x= out.data$Geneid, table =
 out.data <- cbind("Geneid" = out.data$Geneid, "Gene Name" = out.data$GenesSymbol,"Chr" = out.data$Chr, out.data[,3:(length(out.data)-1)])
 
 write.table(out.data,
-            "~/Desktop/04_05_geneCounts.mapped_Cc to Ec.tsv",
+            "~/Desktop/out.tsv",
             col.names = TRUE,
             row.names = FALSE,
             sep = "\t")
+
