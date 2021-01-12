@@ -1,3 +1,6 @@
+# Takes Geneid, Chr, columns beginning with E_ and columns beginning with C_
+# Does normalization, then pvalues, fdr, then translates gene names via conversion table
+
 require("openxlsx")
 require("stats")
 
