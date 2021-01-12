@@ -1,5 +1,5 @@
-# Takes Geneid, Chr, columns beginning with E_ and columns beginning with C_
-# Does normalization, then pvalues, fdr, then translates gene names via conversion table
+# Takes Geneid, columns beginning with E_ and columns beginning with C_
+# Does pvalues and fdr
 
 require("stats")
 
@@ -16,29 +16,31 @@ conList <- colnames(main.data)[substr(colnames(main.data),1,2) == "C_"]
 
 selected.data <- main.data[,c(
   "Geneid",
-  "Chr",
   expList,
   conList
 )]
 
-#get rid of bad rows by gene name
-selected.data <- selected.data[substr(selected.data$Geneid, 1,4) == "ENSG",]
-selected.data[3:length(selected.data)] <- lapply(FUN =  strtoi,X =  selected.data[3:length(selected.data)])
-selected.data <- selected.data[!is.na(selected.data[3]),]
+#get rid of bad rows by gene name -----
+
+# selected.data <- selected.data[substr(selected.data$Geneid, 1,4) == "ENSG",]
+# selected.data[3:length(selected.data)] <- lapply(FUN =  strtoi,X =  selected.data[3:length(selected.data)])
+# selected.data <- selected.data[!is.na(selected.data[3]),]
 
 
+
+# Normalize ----- 
 
 # sumData <- colSums(selected.data[3:length(selected.data)])
 
-norm.data <- data.frame(cbind(
-    "Geneid" = selected.data$Geneid,
-    "Chr" = selected.data$Chr,
-    scale(selected.data[3:length(selected.data)],
-      center = FALSE,
-      scale = sumData)))
+# norm.data <- data.frame(cbind(
+#     "Geneid" = selected.data$Geneid,
+#     "Chr" = selected.data$Chr,
+#     scale(selected.data[3:length(selected.data)],
+#       center = FALSE,
+#       scale = sumData)))
 
 
-selected.data <- norm.data
+# selected.data <- norm.data
 
 
 
@@ -65,7 +67,6 @@ for (i in 1:nrow(selected.data)) {
   }, finally = {
   })
   
-  # test2 <- t.test(controls, experimentals, paired = FALSE, alternative = "two.sided") #changed to false
   selected.data$t_stat   [i] <- test$statistic
   selected.data$p        [i] <- test$p.value
   selected.data$mean_diff[i] <- test$estimate[1] - test$estimate[2] #changed to subtract means!!
