@@ -37,8 +37,8 @@ sumData <- colSums(selected.data[3:length(selected.data)])
 norm.data <- data.frame(cbind(
     "Geneid" = selected.data$Geneid,
     "Chr" = selected.data$Chr,
-      center = FALSE,
     scale(selected.data[3:length(selected.data)],
+      center = FALSE,
       scale = sumData)))
 
 

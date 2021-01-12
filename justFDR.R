@@ -1,17 +1,13 @@
 # Takes Geneid, Chr, columns beginning with E_ and columns beginning with C_
 # Does normalization, then pvalues, fdr, then translates gene names via conversion table
 
-require("openxlsx")
 require("stats")
 
-#cfprank.table <- read.xlsx("/Users/rolandbainton/Desktop/MANCH/02_DEEP_READS_Mnach/Low platelet RANK/WithMockControl_02_DEEP_READS_Manch_CPM_novalues_cutbyCFPrank_pltRanklow.xlsx")
-#platelet.table <- read.xlsx("/Users/rolandbainton/Desktop/MANCH/02_DEEP_READS_Mnach/High platelet RANK/02_DEEP_READS_Manch_CPM_novalues_cutbyCFPrank_pltHigh_aveSD>2.xlsx")
 
 #initialize getteing data and fixing colnames
 main.data <- main_data
 main.data <- data.frame(main.data)
 
-convertGenes <- read.csv("Downloads/CONVERSIONTABLE_GENE STABLE_ENS_GENENAME.csv")
 
 
 expList <- colnames(main.data)[substr(colnames(main.data),1,2) == "E_"]
@@ -32,13 +28,13 @@ selected.data <- selected.data[!is.na(selected.data[3]),]
 
 
 
-sumData <- colSums(selected.data[3:length(selected.data)])
+# sumData <- colSums(selected.data[3:length(selected.data)])
 
 norm.data <- data.frame(cbind(
     "Geneid" = selected.data$Geneid,
     "Chr" = selected.data$Chr,
-      center = FALSE,
     scale(selected.data[3:length(selected.data)],
+      center = FALSE,
       scale = sumData)))
 
 
@@ -83,13 +79,7 @@ for (i in 1:nrow(selected.data)) {
 selected.data$p_adjusted <- p.adjust(selected.data$p, method = "fdr")
 
 
-out.data <- rbind(c("sums", NA, sumData, NA, NA, NA, NA, NA, NA), selected.data)
-
-
-
-out.data$GenesSymbol <- convertGenes$Gene.name[match(x= out.data$Geneid, table = convertGenes$Gene.stable.ID)]
-
-out.data <- cbind("Geneid" = out.data$Geneid, "Gene Name" = out.data$GenesSymbol,"Chr" = out.data$Chr, out.data[,3:(length(out.data)-1)])
+# out.data <- rbind(c("sums", NA, sumData, NA, NA, NA, NA, NA, NA), selected.data)
 
 write.table(out.data,
             "~/Desktop/out.tsv",
