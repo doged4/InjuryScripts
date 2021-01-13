@@ -56,6 +56,11 @@ for (i in 1:nrow(selected.data)) {
                                            expList])
   controls = as.numeric(selected.data[i,
                                       conList])
+
+  # newlines 
+experimentals <- order(experimentals)[2:length(experimentals)]
+controls <- order(controls)[2:length(controls)]
+
   test <- tryCatch({
     t.test(controls, experimentals, paired = FALSE, alternative = "two.sided") #changed to false
   }, warning = function(w) {
