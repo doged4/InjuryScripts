@@ -4,7 +4,7 @@
 # dos2unix *.csv
 
 #<<<<<<< HEAD
-sed -E "s:[^a-zA-Z0-9,\]],:,:g" $1 > $1.fixed
+sed -E "s:[^]a-zA-Z0-9,],:,:g" $1 > $1.fixed
 dos2unix -n $1.fixed $1
 rm $1.fixed
 #=======
