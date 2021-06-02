@@ -2,7 +2,7 @@
 
 mkdir ./STAR.Ensembl.Out;
 thisdir=$(pwd);
-
+# takes list of what will be directories. Good for unfinished runs
 
 
 #run from folder with all the fastqs, so that the for(ls) works
@@ -13,13 +13,13 @@ for i in $(cat $1);  do\
     	cd  ./STAR.Ensembl.Out/${i};
 
 	# outputs sorted bams
-       /STAR/bin/Linux_x86_64/STAR --runMode alignReads --runThreadN 50 --genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38   --readFilesIn  $thisdir/${i}_R1_001.fastq.gz   $thisdir/${i}_R2_001.fastq.gz   --outFileNamePrefix $thisdir/STAR.Ensembl.Out/${i}/${i}.  --sjdbGTFfile /genome/genomes/Ensembl_Grch38/Homo_sapiens.GRCh38.100.gtf --outSAMtype BAM SortedByCoordinate --readFilesCommand zcat;
+       /STAR/bin/Linux_x86_64/STAR --runMode alignReads --runThreadN 50 --genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38   --readFilesIn  $thisdir/${i}_R1_001.fastq.gz   $thisdir/${i}_R2_001.fastq.gz   --outFileNamePrefix $thisdir/STAR.Ensembl.Out/${i}/${i}.  --sjdbGTFfile /genome/genomes/Ensembl_Grch38/Homo_sapiens.GRCh38.100.gtf --outSAMtype BAM Unsorted  --readFilesCommand zcat;
 	cd ..; cd ..;
 	done;
 
 cd  ./STAR.Ensembl.Out
 
-featureCounts -T 45 -a /genome/genomes/Ensembl_Grch38/Homo_sapiens.GRCh38.100.gtf -o geneCounts.mapped */*Aligned.out.bam  #changed to bams, for Ensembl
+featureCounts -T 45 -a /genome/genomes/Ensembl_Grch38/Homo_sapiens.GRCh38.100.gtf -o geneCounts.mapped */*am  #changed to bams, for Ensembl
 
 
 
