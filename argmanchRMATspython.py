@@ -4,12 +4,16 @@
 # In[1]:
 import sys
 assert not len(sys.argv) == 0
-dirIn = str(sys.argv[0])
-nameOut = str(sys.argv[1])
+#input dir
+dirIn = str(sys.argv[1]) # because the filename itself is an argument
+#output file intro
+nameOut = str(sys.argv[2]) # because the filename itself is an argument
 
-if not dirIn[-1] == "/":
+if not dirIn[-1] == "/": # so the directory works
        dirIn = dirIn + "/"
 
+print(dirIn)
+print(nameOut)
 # In[1]:
 
 
