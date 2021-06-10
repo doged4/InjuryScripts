@@ -13,7 +13,7 @@ for i in $(ls *R2_001.fastq.gz | rev | cut -c 17- | rev | uniq);  do\
     	cd  ./STAR.Ensembl.Out/${i};
 
 	# outputs sorted bams
-       /STAR/bin/Linux_x86_64/STAR --runMode alignReads --runThreadN 50 --genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38   --readFilesIn  $thisdir/${i}_R1_001.fastq.gz   $thisdir/${i}_R2_001.fastq.gz   --outFileNamePrefix $thisdir/STAR.Ensembl.Out/${i}/${i}.  --sjdbGTFfile /genome/genomes/Ensembl_Grch38/Homo_sapiens.GRCh38.100.gtf --outSAMtype BAM SortedByCoordinate --readFilesCommand zcat;
+       /STAR/bin/Linux_x86_64/STAR --runMode alignReads --runThreadN 50 --genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38   --readFilesIn  $thisdir/${i}_R1_001.fastq.gz   $thisdir/${i}_R2_001.fastq.gz   --outFileNamePrefix $thisdir/STAR.Ensembl.Out/${i}/${i}.  --sjdbGTFfile /genome/genomes/Ensembl_Grch38/Homo_sapiens.GRCh38.100.gtf --outSAMtype BAM Unsorted --readFilesCommand zcat;
 	cd ..; cd ..;
 	done;
 
