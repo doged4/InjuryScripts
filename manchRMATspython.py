@@ -11,7 +11,7 @@ import pandas as pd
 # data_folder = Path("/Users/manch/rmats/sp4_novaseq2019/")
 # couldnt get this to work: files=data_folder / "*.JCEC.txt"
 # filenames = sorted(glob('/Users/manch/jupyter/rmats6/*.JCEC.txt'))
-filenames = sorted(glob('/Users/cbainton/Desktop/w/rmats.out10/*.JCEC.txt'))
+filenames = sorted(glob('/Users/rolandbainton/Documents/w/extra_space/wholeblood_altitude/STAR.Ensembl.Out/rmats.out1/*.JCEC.txt'))
 dataframes = [pd.read_csv(f, sep='\t') for f in filenames]
 
 
