@@ -122,7 +122,8 @@ def get_linears_from_bsj(sample):
     Relies on DCC CircRNACount (one column) and [sample]SJ.out.tab in same directory.
     Applies filter of more than 1 circular form at junction to calculate.
     '''
-    sj_filename = sample[:(len(sample)-21)] + "SJ.out.tab"
+    # sj_filename = sample[:(len(sample)-21)] + "SJ.out.tab"
+    sj_filename =sample[:len(sample)-32] + "/" + sample[:(len(sample)-21)] + "SJ.out.tab"
     sj_outs = pd.read_csv(sj_filename, sep = "\t", names= sj_head, low_memory=False)
 
     start_dict_fsj = make_fsj_dict(sj_outs, "start")
@@ -155,8 +156,8 @@ def get_linears_from_bsj(sample):
     return (linears_sample_table)
 
 
-sample1 = "1a_S65_L004_chimeric_.Chimeric.out.junction"
-clr_1a = get_clrs(sample1)
+# sample1 = "1a_S65_L004_chimeric_.Chimeric.out.junction"
+# clr_1a = get_clrs(sample1)
 
 # backsplice = circ_counts.loc[37239]
 # linears = get_fsj(backsplice["Chr"], backsplice["End"], backsplice["Start"], start_dict_fsj, end_dict_fsj)
@@ -167,3 +168,12 @@ clr_1a = get_clrs(sample1)
 #     ratio = math.inf
 # clr_row = backsplice.loc[["Chr", "Start", "End", "Strand"]].to_frame().T
 # clr_row[sample] = ratio
+
+main_table = pd.DataFrame(columns=circ_counts.columns)
+
+for sample_name in circ_counts.columns[4:]:
+    current_linear_table = get_linears_from_bsj(sample_name)
+    table_1 = main_table
+    main_table = table_1.merge(current_linear_table, how = "outer", on = ["Chr", "Start", "End", "Strand"]) 
+
+main_table.to_csv("linears_of_each_circular.txt", sep="\t")
