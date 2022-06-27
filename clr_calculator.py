@@ -119,7 +119,7 @@ def get_clrs(sample):
 
 
 def get_linears_from_bsj(sample):
-    '''Given the full chimeric junction filename as an argument, loads circular and linear read tables and returns linear read corresponding to each circular site (back splice junction) table for the sample.
+    '''Given the full chimeric junction filename as an argument, loads circular and linear read tables and returns linear reads corresponding to each circular site (back splice junction) table for the sample.
     Relies on DCC CircRNACount (one column) and [sample]SJ.out.tab in same directory.
     Applies filter of more than 1 circular form at junction to calculate.
     '''
@@ -174,8 +174,10 @@ main_table = pd.DataFrame(columns=circ_counts.columns[:4])
 
 for sample_name in circ_counts.columns[4:]:
     print(sample_name)
-    current_linear_table = get_linears_from_bsj(sample_name)
+    # current_linear_table = get_linears_from_bsj(sample_name)
+    current_clr_table = get_clrs(sample_name)
     table_1 = main_table
-    main_table = table_1.merge(current_linear_table, how = "outer", on = ["Chr", "Start", "End", "Strand"]) 
+    # main_table = table_1.merge(current_linear_table, how = "outer", on = ["Chr", "Start", "End", "Strand"]) 
+    main_table = table_1.merge(current_clr_table, how = "outer", on = ["Chr", "Start", "End", "Strand"]) 
 
 main_table.to_csv("linears_of_each_circular.txt", sep="\t")
