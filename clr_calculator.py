@@ -104,7 +104,7 @@ def get_clrs(sample):
                 ratio = math.inf
             clr_row = backsplice.loc[["Chr", "Start", "End", "Strand"]].to_frame().T
             clr_row[sample] = ratio
-
+            
             clr_sample_table = pd.concat([clr_sample_table , clr_row])
         # print(i)
         frac = math.floor(i / len(circ_counts) * 10)
@@ -112,7 +112,8 @@ def get_clrs(sample):
             progress = frac
             print(str(progress * 10) + "%")
 
-
+    print("-- Done --")
+    clr_sample_table = clr_sample_table.astype({'Start':'int64','End':'int64')
     return (clr_sample_table)
 
 
@@ -151,8 +152,8 @@ def get_linears_from_bsj(sample):
         if frac > progress:
             progress = frac
             print(str(progress * 10) + "%")
-
-
+    print("-- Done --")
+    linears_sample_table = linears_sample_table.astype({'Start':'int64','End':'int64')
     return (linears_sample_table)
 
 
@@ -169,9 +170,10 @@ def get_linears_from_bsj(sample):
 # clr_row = backsplice.loc[["Chr", "Start", "End", "Strand"]].to_frame().T
 # clr_row[sample] = ratio
 
-main_table = pd.DataFrame(columns=circ_counts.columns)
+main_table = pd.DataFrame(columns=circ_counts.columns[:4])
 
 for sample_name in circ_counts.columns[4:]:
+    print(sample_name)
     current_linear_table = get_linears_from_bsj(sample_name)
     table_1 = main_table
     main_table = table_1.merge(current_linear_table, how = "outer", on = ["Chr", "Start", "End", "Strand"]) 
