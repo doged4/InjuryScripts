@@ -104,7 +104,7 @@ def get_clrs(sample):
                 ratio = math.inf
             clr_row = backsplice.loc[["Chr", "Start", "End", "Strand"]].to_frame().T
             clr_row[sample] = ratio
-
+            
             clr_sample_table = pd.concat([clr_sample_table , clr_row])
         # print(i)
         frac = math.floor(i / len(circ_counts) * 10)
@@ -168,7 +168,7 @@ def get_linears_from_bsj(sample):
 # clr_row = backsplice.loc[["Chr", "Start", "End", "Strand"]].to_frame().T
 # clr_row[sample] = ratio
 
-main_table = pd.DataFrame(columns=circ_counts.columns)
+main_table = pd.DataFrame(columns=circ_counts.columns[:4])
 
 for sample_name in circ_counts.columns[4:]:
     print(sample_name)
