@@ -113,7 +113,7 @@ def get_clrs(sample):
             print(str(progress * 10) + "%")
 
     print("-- Done --")
-    clr_sample_table = clr_sample_table.astype({'Start':'int64','End':'int64')
+    clr_sample_table = clr_sample_table.astype({'Start':'int64','End':'int64'})
     return (clr_sample_table)
 
 
@@ -153,7 +153,7 @@ def get_linears_from_bsj(sample):
             progress = frac
             print(str(progress * 10) + "%")
     print("-- Done --")
-    linears_sample_table = linears_sample_table.astype({'Start':'int64','End':'int64')
+    linears_sample_table = linears_sample_table.astype({'Start':'int64','End':'int64'})
     return (linears_sample_table)
 
 
