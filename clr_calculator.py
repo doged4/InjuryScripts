@@ -151,8 +151,7 @@ def get_linears_from_bsj(sample):
         if frac > progress:
             progress = frac
             print(str(progress * 10) + "%")
-
-
+    print("-- Done --")
     return (linears_sample_table)
 
 
@@ -172,6 +171,7 @@ def get_linears_from_bsj(sample):
 main_table = pd.DataFrame(columns=circ_counts.columns)
 
 for sample_name in circ_counts.columns[4:]:
+    print(sample_name)
     current_linear_table = get_linears_from_bsj(sample_name)
     table_1 = main_table
     main_table = table_1.merge(current_linear_table, how = "outer", on = ["Chr", "Start", "End", "Strand"]) 
