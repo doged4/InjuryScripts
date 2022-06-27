@@ -83,7 +83,7 @@ def get_clrs(sample):
     Relies on DCC CircRNACount (one column) and [sample]SJ.out.tab in same directory.
     Applies filter of more than 1 circular form at junction to calculate.
     '''
-    sj_filename = sample[:(len(sample)-21)] + "SJ.out.tab"
+    sj_filename =sample[:len(sample)-32] + "/" + sample[:(len(sample)-21)] + "SJ.out.tab"
     sj_outs = pd.read_csv(sj_filename, sep = "\t", names= sj_head, low_memory=False)
 
     start_dict_fsj = make_fsj_dict(sj_outs, "start")
