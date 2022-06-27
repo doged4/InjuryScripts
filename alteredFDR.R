@@ -9,38 +9,52 @@ main.data <- main_data
 main.data <- data.frame(main.data)
 
 
+# Get rid of bad samples
+usedcols <- colnames(main.data)[!(grepl("V2_S6", colnames(main.data), fixed = TRUE) | grepl("V2_S15", colnames(main.data), fixed = TRUE))]
+main.data <- main.data[usedcols]
+# rid of here
 
-expList <- colnames(main.data)[substr(colnames(main.data),1,2) == "E_"]
-conList <- colnames(main.data)[substr(colnames(main.data),1,2) == "C_"]
+# 
+# expList <- colnames(main.data)[substr(colnames(main.data),1,2) == "E_"]
+# conList <- colnames(main.data)[substr(colnames(main.data),1,2) == "C_"]
 
+
+
+v2 <- colnames(main.data)[grepl("V2", colnames(main.data), fixed=TRUE)]
+v4 <- colnames(main.data)[grepl("V4", colnames(main.data), fixed=TRUE)]
+v7 <- colnames(main.data)[grepl("V7", colnames(main.data), fixed=TRUE)]
+
+expList = v4
+conList = v7
 
 selected.data <- main.data[,c(
   "Geneid",
+  "Chr",
   expList,
   conList
 )]
 
 #get rid of bad rows by gene name -----
 
-# selected.data <- selected.data[substr(selected.data$Geneid, 1,4) == "ENSG",]
-# selected.data[3:length(selected.data)] <- lapply(FUN =  strtoi,X =  selected.data[3:length(selected.data)])
-# selected.data <- selected.data[!is.na(selected.data[3]),]
+selected.data <- selected.data[substr(selected.data$Geneid, 1,4) == "ENSG",]
+selected.data[3:length(selected.data)] <- lapply(FUN =  strtoi,X =  selected.data[3:length(selected.data)])
+selected.data <- selected.data[!is.na(selected.data[3]),]
 
 
 
 # Normalize ----- 
 
-# sumData <- colSums(selected.data[3:length(selected.data)])
+sumData <- colSums(selected.data[3:length(selected.data)])
 
-# norm.data <- data.frame(cbind(
-#     "Geneid" = selected.data$Geneid,
-#     "Chr" = selected.data$Chr,
-#     scale(selected.data[3:length(selected.data)],
-#       center = FALSE,
-#       scale = sumData)))
+norm.data <- data.frame(cbind(
+    "Geneid" = selected.data$Geneid,
+    "Chr" = selected.data$Chr,
+    scale(selected.data[3:length(selected.data)],
+      center = FALSE,
+      scale = sumData)))
 
+selected.data <- norm.data
 
-# selected.data <- norm.data
 
 
 
@@ -56,6 +70,11 @@ for (i in 1:nrow(selected.data)) {
                                            expList])
   controls = as.numeric(selected.data[i,
                                       conList])
+
+  # newlines 
+experimentals <- order(experimentals)[2:length(experimentals)]
+controls <- order(controls)[2:length(controls)]
+
   test <- tryCatch({
     t.test(controls, experimentals, paired = FALSE, alternative = "two.sided") #changed to false
   }, warning = function(w) {
@@ -80,10 +99,10 @@ for (i in 1:nrow(selected.data)) {
 selected.data$p_adjusted <- p.adjust(selected.data$p, method = "fdr")
 
 
-# out.data <- rbind(c("sums", NA, sumData, NA, NA, NA, NA, NA, NA), selected.data)
+out.data <- rbind(c("sums", NA, sumData, NA, NA, NA, NA, NA, NA), selected.data)
 
 write.table(selected.data,
-            "~/Desktop/out.tsv",
+            "~/Desktop/w/4v7.tsv",
             col.names = TRUE,
             row.names = FALSE,
             sep = "\t")

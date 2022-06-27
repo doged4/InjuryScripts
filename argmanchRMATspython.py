@@ -2,16 +2,30 @@
 # coding: utf-8
 
 # In[1]:
+import sys
+assert not len(sys.argv) == 0
+#input dir
+dirIn = str(sys.argv[1]) # because the filename itself is an argument
+#output file intro
+nameOut = str(sys.argv[2]) # because the filename itself is an argument
+
+if not dirIn[-1] == "/": # so the directory works
+       dirIn = dirIn + "/"
+
+print(dirIn)
+print(nameOut)
+# In[1]:
 
 
 from glob import glob
 from pathlib import Path
 import pandas as pd
 
+# should
 # data_folder = Path("/Users/manch/rmats/sp4_novaseq2019/")
 # couldnt get this to work: files=data_folder / "*.JCEC.txt"
 # filenames = sorted(glob('/Users/manch/jupyter/rmats6/*.JCEC.txt'))
-filenames = sorted(glob('/genome/extra_space/wholeblood_altitude/STAR.Ensembl.Out/rmats.out2v4/*.JCEC.txt'))
+filenames = sorted(glob(dirIn+'*.JCEC.txt'))
 dataframes = [pd.read_csv(f, sep='\t') for f in filenames]
 
 
@@ -75,7 +89,7 @@ SUMMARY_FDR
 # In[7]:
 
 
-SUMMARY_FDR.to_csv('rmats6_25.csv')
+SUMMARY_FDR.to_csv(nameOut+'_25.csv')
 
 
 # In[8]:
@@ -110,7 +124,7 @@ SUMMARY_FDR1 = SUMMARY_FDR1.reindex(columns=column_names)
 SUMMARY_FDR1
 
 
-SUMMARY_FDR1.to_csv('rmats6_01.csv')
+SUMMARY_FDR1.to_csv(nameOut+'_01.csv')
 
 
 # In[ ]:
