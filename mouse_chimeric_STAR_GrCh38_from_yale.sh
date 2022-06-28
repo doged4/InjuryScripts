@@ -53,13 +53,7 @@ do
 		--chimScoreMin 15 \
 		--chimScoreSeparation 10 \
 		--chimJunctionOverhangMin 15 \
-		--genomeDir /genome/genomes/mouse_genome/STAR_mouse  \
-		--readFilesIn  $thisdir/${R1_path} \
-	      	#	$thisdir/${R2_path} \
-	      	--outFileNamePrefix $thisdir/chimeric_STAR.Ensembl.Out/${ID}/${ID}_chimeric_. \ 
-	       	--sjdbGTFfile /genome/genomes/mouse_genome/GCF_000001635.27_GRCm39_genomic.gtf \
-	       	--outSAMtype BAM Unsorted \
-	       	--readFilesCommand zcat;
+		--genomeDir /genome/genomes/mouse_genome/STAR_mouse  --readFilesIn  $thisdir/${R1_path} --outFileNamePrefix $thisdir/chimeric_STAR.Ensembl.Out/${ID}/${ID}_chimeric_.   --sjdbGTFfile /genome/genomes/mouse_genome/GCF_000001635.27_GRCm39_genomic.gtf  --outSAMtype BAM Unsorted --readFilesCommand zcat;
 
        samtools sort -@32 -m 4G -o ${i}_sorted_chimeric.bam ${i}_chimeric_.Aligned.out.bam 
        samtools index ${i}_sorted_chimeric.bam
