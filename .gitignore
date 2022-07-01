@@ -1,3 +1,5 @@
 rmats_altitude_2v7_01.csv
 .DS_Store
 .gitignore
+.RData
+.Rhistory
