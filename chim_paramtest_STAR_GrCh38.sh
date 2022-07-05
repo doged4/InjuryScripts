@@ -11,12 +11,13 @@ thisdir=$(pwd);
 filename="./samples.txt"
 n=1
 
-#Not working because sjdb setting? seems that cannot do on the fly junction insertion 
+# Seems that cannot do 'on the fly junction insertion' with shared genome?
+# Command works
 #/STAR/bin/Linux_x86_64/STAR --runMode alignReads \
 #	--genomeLoad LoadAndExit \
 #	--runThreadN 50  \
 #	--genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38 \
-#	--sjdbGTFfile /genome/genomes/Ensembl_Grch38/Homo_sapiens.GRCh38.100.gtf
+
 
 while read line
 do
@@ -87,7 +88,7 @@ done < $filename
 
 
 
-# /STAR/bin/Linux_x86_64/STAR --runMode alignReads --genomeLoad Remove --runThreadN 50 --genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38 --sjdbGTFfile /genome/genomes/Ensembl_Grch38/Homo_sapiens.GRCh38.100.gtf  
+# /STAR/bin/Linux_x86_64/STAR --runMode alignReads --genomeLoad Remove --runThreadN 50 --genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38\
 
 
 
