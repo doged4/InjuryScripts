@@ -13,7 +13,7 @@ remove_bad_bed_lines = True
 
 circ_coords = pd.read_csv('CircCoordinates', delim_whitespace=True,low_memory = False, names =  ["chr", "start", "end", "gene", "JunctionType", "strand", "Start-End Region", "OverallRegion"], index_col=False)
 circ_coords = circ_coords.loc[1:]
-circ_coords.loc[:,"name"] = circ_coords.loc[:,"gene"] + "_" + circ_coords.loc[:,"JunctionType"] + "_" + circ_coords.loc[:,"Start-End Region"] + "_" +  circ_coords.loc[:,"OverallRegion"]
+circ_coords.loc[:,"name"] = circ_coords.loc[:,"gene"] + ":" + circ_coords.loc[:,"JunctionType"] + ":" + circ_coords.loc[:,"Start-End Region"] + ":" +  circ_coords.loc[:,"OverallRegion"]
 
 
 circ_counts = pd.read_csv('CircRNACount', delim_whitespace=True,low_memory = False)
@@ -24,7 +24,7 @@ circ_counts.loc[:,"score"] = ""
 for i in range(4,len(circ_counts.columns)-1):
     # print(circ_counts.loc[:,"score"])
     # print(circ_counts.loc[:,"score"] + circ_counts.iloc[:,i] + ";")
-    circ_counts.loc[:,"score"] = circ_counts.loc[:,"score"] + circ_counts.iloc[:,i] + "_"
+    circ_counts.loc[:,"score"] = circ_counts.loc[:,"score"] + circ_counts.iloc[:,i] + ":"
 
 
 circ_full = circ_coords
@@ -65,7 +65,7 @@ for line in annotated_file:
     name = line.split()[3]
     strand = line.split()[5]
     score_text = line.split()[4] # seperates on whitespace
-    score = score_text.split("_")[0:-1] # gets rid of trailing _ 
+    score = score_text.split(":")[0:-1] # gets rid of trailing _ 
     score = [int(val) for val in score]
 
     # print((chrom,start,end,name,strand))
@@ -93,10 +93,11 @@ if include_superset_dcc:
     superset_genes_annotated = dict()
     for this_key in annotated_circs.keys():
         this_name = this_key[3]
-        this_gene_text = this_name.split("_")[0]
+        this_gene_text = this_name.split(":")[0]
         dcc_genes = this_gene_text.split(',')
 
-        score, bed_genes = annotated_circs[this_key]
+        score, bed_genes_text = annotated_circs[this_key]
+        bed_genes = bed_genes_text.split(";")
         genes_to_add = []
         for n_gene in dcc_genes:
             if not n_gene in bed_genes:
@@ -137,7 +138,7 @@ for i in range(0,len(sample_names)):
 annotated_circ_frame.loc[:,"Gene"] =  temp_counts.iloc[:,1].values
 
 annotated_circ_frame = annotated_circ_frame.astype({"Chr" : str, "Start" : int, "End" : int, "Name" : str, "Strand" : str, "Gene" : str})
-temp_names = annotated_circ_frame.loc[:,"Name"].str.split("_") # eliminated pat for compatibility with python2
+temp_names = annotated_circ_frame.loc[:,"Name"].str.split(":") # eliminated pat for compatibility with python2
 annotated_circ_frame.loc[:,"JunctionType"] = [name[1] for name in temp_names]
 annotated_circ_frame.loc[:,"Start-End Region"] = [name[2] for name in temp_names]
 annotated_circ_frame.loc[:,"OverallRegion"] = [name[3] for name in temp_names]
