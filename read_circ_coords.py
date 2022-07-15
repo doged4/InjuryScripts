@@ -121,6 +121,11 @@ annotated_circ_frame.loc[:,"OverallRegion"] = [name[3] for name in temp_names]
 
 
 
+# Filters out mitochondrial genes. 
+# Make this an option in future
+annotated_circ_frame = annotated_circ_frame[not annotated_circ_frame.loc[:,"Chr"] == "MT"]
+
+
 # annotated_circ_frame.to_csv("all_CircCoordinates_and_Counts.new", sep = "\t")
 
 # gene_circ_frame.to_csv("circ_counts_per_gene.txt", sep = "\t")
