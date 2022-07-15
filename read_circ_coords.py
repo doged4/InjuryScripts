@@ -1,5 +1,6 @@
 import pandas as pd
 import subprocess
+import os
 
 circ_coords = pd.read_csv('CircCoordinates', delim_whitespace=True,low_memory = False, names =  ["chr", "start", "end", "gene", "JunctionType", "strand", "Start-End Region", "OverallRegion"], index_col=False)
 circ_coords = circ_coords.loc[1:]
@@ -122,12 +123,18 @@ annotated_circ_frame.loc[:,"OverallRegion"] = [name[3] for name in temp_names]
 
 
 easy_pipeline_circs = annotated_circ_frame.loc[:,["Chr", "Start", "End", "Strand"] + sample_names + ["Gene"]]
+try:
+    os.mkdir("annotated_counts")
+except:
+    print("Directory annotated_counts exits")
 
 for this_sample in sample_names:
     current_frame = easy_pipeline_circs.loc[:,["Chr", "Start", "End", "Strand", this_sample, "Gene"]]
     current_frame = current_frame.rename(columns={this_sample : "counts"})
     short_name = this_sample.split(sep="_chimeric")[0]
-    current_frame.to_csv(short_name + "_corrected_circ_counts.txt", sep = "\t")
+    current_frame.to_csv("annotated_counts/" + short_name + "_corrected_circ_counts.txt", sep = "\t")
+
+
 
 
 
