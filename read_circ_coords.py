@@ -132,7 +132,7 @@ for this_sample in sample_names:
     current_frame = easy_pipeline_circs.loc[:,["Chr", "Start", "End", "Strand", this_sample, "Gene"]]
     current_frame = current_frame.rename(columns={this_sample : "counts"})
     short_name = this_sample.split(sep="_chimeric")[0]
-    current_frame.to_csv("annotated_counts/" + short_name + "_corrected_circ_counts.txt", sep = "\t")
+    current_frame.to_csv("annotated_counts/" + short_name + "_corrected_circ_counts.txt", sep = "\t", index_label= False)
 
 
 
