@@ -2,6 +2,10 @@ import pandas as pd
 import subprocess
 import os
 
+# Relies on bedtools
+# Needs to be in same directory as CircCoordinates and CircRNACount
+
+
 circ_coords = pd.read_csv('CircCoordinates', delim_whitespace=True,low_memory = False, names =  ["chr", "start", "end", "gene", "JunctionType", "strand", "Start-End Region", "OverallRegion"], index_col=False)
 circ_coords = circ_coords.loc[1:]
 circ_coords.loc[:,"name"] = circ_coords.loc[:,"gene"] + "_" + circ_coords.loc[:,"JunctionType"] + "_" + circ_coords.loc[:,"Start-End Region"] + "_" +  circ_coords.loc[:,"OverallRegion"]
@@ -39,9 +43,9 @@ scored_genes = dict()
 
 
 for line in annotated_file:
-    if len(line.split(sep=";")) > 1 :
-        name_text = line.split(sep=";")[2]
-        type_text = line.split(sep=";")[4]
+    if len(line.split(";")) > 1 :
+        name_text = line.split(";")[2]
+        type_text = line.split(";")[4]
         # if not name_text[1:10] == "gene_name":
         #     print(name_text)
         assert(name_text[1:10] == "gene_name")
@@ -56,7 +60,7 @@ for line in annotated_file:
     name = line.split()[3]
     strand = line.split()[5]
     score_text = line.split()[4] # seperates on whitespace
-    score = score_text.split(sep="_")[0:-1] # gets rid of trailing _ 
+    score = score_text.split("_")[0:-1] # gets rid of trailing _ 
     score = [int(val) for val in score]
 
     # print((chrom,start,end,name,strand))
@@ -131,7 +135,7 @@ except:
 for this_sample in sample_names:
     current_frame = easy_pipeline_circs.loc[:,["Chr", "Start", "End", "Strand", this_sample, "Gene"]]
     current_frame = current_frame.rename(columns={this_sample : "counts"})
-    short_name = this_sample.split(sep="_chimeric")[0]
+    short_name = this_sample.split("_chimeric")[0]
     current_frame.to_csv("annotated_counts/" + short_name + "_corrected_circ_counts.txt", sep = "\t", index_label= False)
 
 
