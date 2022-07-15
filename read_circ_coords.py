@@ -31,7 +31,7 @@ bed_circ_coords.to_csv("test_out.bed",index = False,sep="\t")
 
 
 
-# 
+print("Running bedtools to intersect")
 subprocess.call("/usr/bin/bedtools intersect -loj -wa -wb -a test_out.bed -b /home/beccai/testing_regtools/just_genes_Ensembl_GRCh38.100.bed > intersected_gene_annotations.bed", shell = True)
 
 # keep only coding rna genes as option?
@@ -41,7 +41,7 @@ annotated_file = open("intersected_gene_annotations.bed","r")
 annotated_circs = dict()
 scored_genes = dict()
 
-
+print("Reading bed intersections")
 for line in annotated_file:
     if len(line.split(";")) > 1 :
         name_text = line.split(";")[2]
@@ -83,7 +83,7 @@ for line in annotated_file:
 annotated_file.close()
 
 
-
+print("Creating outfiles")
 gene_circ_frame = pd.DataFrame.from_dict(scored_genes,orient="index", columns = sample_names)
 
 
@@ -113,7 +113,7 @@ for i in range(0,len(sample_names)):
 annotated_circ_frame.loc[:,"Gene"] =  temp_counts.iloc[:,1].values
 
 annotated_circ_frame = annotated_circ_frame.astype({"Chr" : str, "Start" : int, "End" : int, "Name" : str, "Strand" : str, "Gene" : str})
-temp_names = annotated_circ_frame.loc[:,"Name"].str.split(pat="_")
+temp_names = annotated_circ_frame.loc[:,"Name"].str.split("_") # eliminated pat for compatibility with python2
 annotated_circ_frame.loc[:,"JunctionType"] = [name[1] for name in temp_names]
 annotated_circ_frame.loc[:,"Start-End Region"] = [name[2] for name in temp_names]
 annotated_circ_frame.loc[:,"OverallRegion"] = [name[3] for name in temp_names]
@@ -132,6 +132,7 @@ try:
 except:
     print("Directory annotated_counts exits")
 
+print("Writing to ./annotated_counts/")
 for this_sample in sample_names:
     current_frame = easy_pipeline_circs.loc[:,["Chr", "Start", "End", "Strand", this_sample, "Gene"]]
     current_frame = current_frame.rename(columns={this_sample : "counts"})
@@ -141,7 +142,8 @@ for this_sample in sample_names:
 
 
 
-
-# need to extract name data to own columns?
-# also test bedtools
+# Remove temp files
+# Move justgenes.bed elsewhere
+# Decide about outputting extra data
+#   need to extract name data to own columns?
 # test runtime?
