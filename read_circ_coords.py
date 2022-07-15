@@ -9,7 +9,7 @@ circ_coords.loc[:,"name"] = circ_coords.loc[:,"gene"] + "_" + circ_coords.loc[:,
 circ_counts = pd.read_csv('CircRNACount', delim_whitespace=True,low_memory = False)
 circ_counts = circ_counts.astype(str)
 
-sample_names = circ_counts.columns[4:len(circ_counts.columns)]
+sample_names = circ_counts.columns[4:len(circ_counts.columns)].to_list()
 circ_counts.loc[:,"score"] = ""
 for i in range(4,len(circ_counts.columns)-1):
     # print(circ_counts.loc[:,"score"])
