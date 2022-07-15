@@ -149,7 +149,8 @@ annotated_circ_frame.loc[:,"OverallRegion"] = [name[3] for name in temp_names]
 # Filters out mitochondrial genes. 
 # Make this an option in future
 if filter_mt:
-    annotated_circ_frame = annotated_circ_frame[not annotated_circ_frame.loc[:,"Chr"] == "MT"]
+    mitochondrial_bools =  [not is_mt for is_mt in annotated_circ_frame.loc[:,"Chr"] == "MT"]
+    annotated_circ_frame = annotated_circ_frame[mitochondrial_bools]
 
 
 if output_full_csv:
