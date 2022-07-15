@@ -4,6 +4,11 @@ import os
 
 # Relies on bedtools
 # Needs to be in same directory as CircCoordinates and CircRNACount
+include_superset_dcc = True
+filter_mt = True
+output_full_csv = False
+output_gene_counts = False
+remove_bad_bed_lines = True
 
 
 circ_coords = pd.read_csv('CircCoordinates', delim_whitespace=True,low_memory = False, names =  ["chr", "start", "end", "gene", "JunctionType", "strand", "Start-End Region", "OverallRegion"], index_col=False)
@@ -82,6 +87,24 @@ for line in annotated_file:
 
 annotated_file.close()
 
+# For all circs, find DCC annotation and add that as well
+if include_superset_dcc:
+    print("Taking superset with DCC")
+    superset_genes_annotated = dict()
+    for this_key in annotated_circs.keys():
+        this_name = this_key[3]
+        this_gene_text = this_name.split("_")[0]
+        dcc_genes = this_gene_text.split(',')
+
+        score, bed_genes = annotated_circs[this_key]
+        genes_to_add = []
+        for n_gene in dcc_genes:
+            if not n_gene in bed_genes:
+                genes_to_add += [n_gene]
+
+        superset_genes_annotated[this_key] = [score, bed_genes + genes_to_add]
+    
+    annotated_circs = superset_genes_annotated
 
 print("Creating outfiles")
 gene_circ_frame = pd.DataFrame.from_dict(scored_genes,orient="index", columns = sample_names)
@@ -92,11 +115,12 @@ annotated_circ_frame = pd.DataFrame()
 start_temp_counts = pd.DataFrame.from_dict(annotated_circs,orient="index")
 
 # This cleans, shouldn't stay here
-samples_clean_bools = [len(thiscount) == len(sample_names) for thiscount in start_temp_counts.iloc[:,0]]
-temp_counts = start_temp_counts[samples_clean_bools]
-bad_lines = sum([not sample_bool for sample_bool in samples_clean_bools])
-if not bad_lines == 0:
-    print("Lines degraded: " + str(bad_lines) + " lines")
+if remove_bad_bed_lines:
+    samples_clean_bools = [len(thiscount) == len(sample_names) for thiscount in start_temp_counts.iloc[:,0]]
+    temp_counts = start_temp_counts[samples_clean_bools]
+    bad_lines = sum([not sample_bool for sample_bool in samples_clean_bools])
+    if not bad_lines == 0:
+        print("Lines degraded: " + str(bad_lines) + " lines")
 
 annotated_circ_frame.loc[:,"Chr"] = [tup_ind[0] for tup_ind in temp_counts.index]
 annotated_circ_frame.loc[:,"Start"] = [tup_ind[1] for tup_ind in temp_counts.index]
@@ -123,14 +147,17 @@ annotated_circ_frame.loc[:,"OverallRegion"] = [name[3] for name in temp_names]
 
 # Filters out mitochondrial genes. 
 # Make this an option in future
-annotated_circ_frame = annotated_circ_frame[not annotated_circ_frame.loc[:,"Chr"] == "MT"]
+if filter_mt:
+    annotated_circ_frame = annotated_circ_frame[not annotated_circ_frame.loc[:,"Chr"] == "MT"]
 
 
-# annotated_circ_frame.to_csv("all_CircCoordinates_and_Counts.new", sep = "\t")
+if output_full_csv:
+    annotated_circ_frame.to_csv("all_CircCoordinates_and_Counts.new", sep = "\t")
 
-# gene_circ_frame.to_csv("circ_counts_per_gene.txt", sep = "\t")
+if output_gene_counts:
+    gene_circ_frame.to_csv("circ_counts_per_gene.txt", sep = "\t")
 
-
+# Output sample by sample
 easy_pipeline_circs = annotated_circ_frame.loc[:,["Chr", "Start", "End", "Strand"] + sample_names + ["Gene"]]
 try:
     os.mkdir("annotated_counts")
