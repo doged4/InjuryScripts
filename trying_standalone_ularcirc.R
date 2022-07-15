@@ -15,7 +15,7 @@ out_juncs <- FilterChimeric_Ularcirc(sample3a_achimerics$data_set)$SummaryData
 
 FilterChimeric_Ularcirc(canonicalJuncs = )
 
-
+# Look at Annotate_with_av_FSJ_coverage output in Server.R
 
 out_juncs <- FilterChimeric_Ularcirc(sample3a_achimerics$data_set, chromFilter = TRUE, strandFilter = TRUE, summaryNumber = 10000, chrM_Filter = TRUE)$SummaryData
 # must be on same chormosome
