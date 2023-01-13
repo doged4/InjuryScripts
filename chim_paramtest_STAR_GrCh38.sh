@@ -4,6 +4,8 @@ mkdir ./chimeric_STAR.Ensembl.Out;
 thisdir=$(pwd);
 
 
+# Seems from STAR manual that we should remove --sjdbGTFfile setting from STAR calls and use shared memory
+
 
 #run from folder with all the fastqs, so that the for(ls) works
 
@@ -13,10 +15,10 @@ n=1
 
 # Seems that cannot do 'on the fly junction insertion' with shared genome?
 # Command works
-#/STAR/bin/Linux_x86_64/STAR --runMode alignReads \
-#	--genomeLoad LoadAndExit \
-#	--runThreadN 50  \
-#	--genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38 \
+/STAR/bin/Linux_x86_64/STAR --runMode alignReads \
+	--genomeLoad LoadAndExit \
+	--runThreadN 50  \
+	--genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38 
 
 
 while read line
@@ -58,14 +60,7 @@ do
 		--chimScoreMin 15 \
 		--chimScoreSeparation 10 \
 		--chimJunctionOverhangMin 15 \
-		--genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38   --readFilesIn  ${R1_path}   ${R2_path}   --outFileNamePrefix $thisdir/chimeric_STAR.Ensembl.Out/${ID}/${ID}_chimeric_.  --sjdbGTFfile /genome/genomes/Ensembl_Grch38/Homo_sapiens.GRCh38.100.gtf --outSAMtype BAM Unsorted --readFilesCommand zcat;
-
-#	samtools sort -@32 -m 4G -o ${ID}_sorted_chimeric.bam ${ID}_chimeric_.Aligned.out.bam 
-#	samtools index ${ID}_sorted_chimeric.bam
-#
-#	samtools view -S -b ${ID}_chimeric_.Chimeric.out.sam > ${ID}_chimeric_.Chimeric.out.bam
-#	samtools sort -@32 -m 4G -o ${ID}_sorted_chimeric_.Chimeric.out.bam ${ID}_chimeric_.Chimeric.out.bam
-#	samtools index ${ID}_chimeric_.Chimeric.out.bam
+		--genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38   --readFilesIn  ${R1_path}   ${R2_path}   --outFileNamePrefix $thisdir/chimeric_STAR.Ensembl.Out/${ID}/${ID}_chimeric_.  --outSAMtype BAM Unsorted --readFilesCommand zcat;
 
 
 	echo "Sorting unambigous bam"
@@ -88,7 +83,7 @@ done < $filename
 
 
 
-# /STAR/bin/Linux_x86_64/STAR --runMode alignReads --genomeLoad Remove --runThreadN 50 --genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38\
+/STAR/bin/Linux_x86_64/STAR --runMode alignReads --genomeLoad Remove --runThreadN 50 --genomeDir /genome/genomes/Ensembl_Grch38/STAR.Ensembl.GRCh38
 
 
 
