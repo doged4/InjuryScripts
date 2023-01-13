@@ -1,0 +1,2 @@
+Scripts from: /genome/extra_space/ysantos/nucleotide_level_counting/nbc_trauma_analysis/counting_activating_conditions_BCD/shortened_bams
+
